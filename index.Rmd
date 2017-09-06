@@ -20,3 +20,23 @@ where teamID='NYA'and yearID=1927"
 sqldf(query)
 ```
 
+Let's try another example. we want to find instances where the Yankees have hit 40 or more home runs. I would write the query this way:
+```{r}
+query<-"Select playerID,yearID,teamID,HR from Batting
+Where teamID='NYA' and HR>=40"
+sqldf(query)
+```
+
+Now we want to see instances when a player had more than 40 home runs but less than 60 strikeouts. This is how the query would look:
+```{r}
+query<-"select playerID,yearID,teamID,HR,SO from Batting
+where HR>=40 and SO<60"
+sqldf(query)
+```
+Lastly, let's do a tougher example. We want to find instances where the PHillies in the 1970's hit more than 30 home runs. The tricky part is figuring out how to display data between 1970 and 1979. This is how I wrote the query:
+```{r}
+query<-"Select playerID,teamID,yearID,HR from Batting 
+where teamID='PHI' and yearID<1980 and yearID>1969 and HR>30"
+sqldf(query)
+```
+

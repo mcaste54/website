@@ -155,6 +155,92 @@ sqldf(query)</code></pre>
 ## 23 shockur01   1927    NYA  0
 ## 24 thomamy01   1927    NYA  0
 ## 25  weraju01   1927    NYA  1</code></pre>
+<p>Let’s try another example. we want to find instances where the Yankees have hit 40 or more home runs. I would write the query this way:</p>
+<pre class="r"><code>query&lt;-&quot;Select playerID,yearID,teamID,HR from Batting
+Where teamID='NYA' and HR&gt;=40&quot;
+sqldf(query)</code></pre>
+<pre><code>##     playerID yearID teamID HR
+## 1   ruthba01   1920    NYA 54
+## 2   ruthba01   1921    NYA 59
+## 3   ruthba01   1923    NYA 41
+## 4   ruthba01   1924    NYA 46
+## 5   ruthba01   1926    NYA 47
+## 6  gehrilo01   1927    NYA 47
+## 7   ruthba01   1927    NYA 60
+## 8   ruthba01   1928    NYA 54
+## 9   ruthba01   1929    NYA 46
+## 10 gehrilo01   1930    NYA 41
+## 11  ruthba01   1930    NYA 49
+## 12 gehrilo01   1931    NYA 46
+## 13  ruthba01   1931    NYA 46
+## 14  ruthba01   1932    NYA 41
+## 15 gehrilo01   1934    NYA 49
+## 16 gehrilo01   1936    NYA 49
+## 17 dimagjo01   1937    NYA 46
+## 18 mantlmi01   1956    NYA 52
+## 19 mantlmi01   1958    NYA 42
+## 20 mantlmi01   1960    NYA 40
+## 21 mantlmi01   1961    NYA 54
+## 22 marisro01   1961    NYA 61
+## 23 jacksre01   1980    NYA 41
+## 24 martiti02   1997    NYA 44
+## 25 giambja01   2002    NYA 41
+## 26 giambja01   2003    NYA 41
+## 27 rodrial01   2005    NYA 48
+## 28 rodrial01   2007    NYA 54
+## 29 grandcu01   2011    NYA 41
+## 30 grandcu01   2012    NYA 43</code></pre>
+<p>Now we want to see instances when a player had more than 40 home runs but less than 60 strikeouts. This is how the query would look:</p>
+<pre class="r"><code>query&lt;-&quot;select playerID,yearID,teamID,HR,SO from Batting
+where HR&gt;=40 and SO&lt;60&quot;
+sqldf(query)</code></pre>
+<pre><code>##     playerID yearID teamID HR SO
+## 1  hornsro01   1922    SLN 42 50
+## 2  willicy01   1923    PHI 41 57
+## 3    ottme01   1929    NY1 42 38
+## 4  kleinch01   1930    PHI 40 50
+## 5  gehrilo01   1931    NYA 46 56
+## 6   ruthba01   1931    NYA 46 51
+## 7  gehrilo01   1934    NYA 49 31
+## 8  gehrilo01   1936    NYA 49 46
+## 9  troskha01   1936    CLE 42 58
+## 10 dimagjo01   1937    NYA 46 37
+## 11  mizejo01   1940    SLN 43 49
+## 12  mizejo01   1947    NY1 51 42
+## 13  mizejo01   1948    NY1 40 37
+## 14 willite01   1949    BOS 43 48
+## 15 kinerra01   1951    PIT 42 57
+## 16 camparo01   1953    BRO 41 58
+## 17 kluszte01   1953    CIN 40 34
+## 18 rosenal01   1953    CLE 43 48
+## 19 kluszte01   1954    CIN 49 35
+## 20  mayswi01   1954    NY1 41 57
+## 21 kluszte01   1955    CIN 47 40
+## 22 aaronha01   1957    ML1 44 58
+## 23 sievero01   1957    WS1 42 55
+## 24 aaronha01   1969    ATL 44 47
+## 25 aaronha01   1971    ATL 47 58
+## 26 aaronha01   1973    ATL 40 51
+## 27 thomafr04   1993    CHA 41 54
+## 28 bondsba01   2002    SFN 46 47
+## 29 bondsba01   2003    SFN 45 58
+## 30 bondsba01   2004    SFN 45 41
+## 31 pujolal01   2004    SLN 46 52
+## 32 pujolal01   2006    SLN 49 50</code></pre>
+<p>Lastly, let’s do a tougher example. We want to find instances where the PHillies in the 1970’s hit more than 30 home runs. The tricky part is figuring out how to display data between 1970 and 1979. This is how I wrote the query:</p>
+<pre class="r"><code>query&lt;-&quot;Select playerID,teamID,yearID,HR from Batting 
+where teamID='PHI' and yearID&lt;1980 and yearID&gt;1969 and HR&gt;30&quot;
+sqldf(query)</code></pre>
+<pre><code>##    playerID teamID yearID HR
+## 1 johnsde01    PHI   1971 34
+## 2 schmimi01    PHI   1974 36
+## 3 luzingr01    PHI   1975 34
+## 4 schmimi01    PHI   1975 38
+## 5 schmimi01    PHI   1976 38
+## 6 luzingr01    PHI   1977 39
+## 7 schmimi01    PHI   1977 38
+## 8 luzingr01    PHI   1978 35
+## 9 schmimi01    PHI   1979 45</code></pre>
 </div>
 
 
