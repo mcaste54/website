@@ -12,7 +12,7 @@ library(Lahman)
 library(sqldf)
 ```
 
-suppose now I would like to see the homerun totals for the 1927 Yankees. I could write the following query:
+suppose now I would like to see the home run totals for the 1927 Yankees. I could write the following query:
 
 ```{r}
 query<-"select playerID,yearID,teamID,HR from Batting
@@ -33,10 +33,22 @@ query<-"select playerID,yearID,teamID,HR,SO from Batting
 where HR>=40 and SO<60"
 sqldf(query)
 ```
-Lastly, let's do a tougher example. We want to find instances where the PHillies in the 1970's hit more than 30 home runs. The tricky part is figuring out how to display data between 1970 and 1979. This is how I wrote the query:
+
+Let's do a tougher example. We want to find instances where the Phillies in the 1970's hit more than 30 home runs. The tricky part is figuring out how to display data between 1970 and 1979. This is how I wrote the query:
 ```{r}
 query<-"Select playerID,teamID,yearID,HR from Batting 
 where teamID='PHI' and yearID<1980 and yearID>1969 and HR>30"
+sqldf(query)
+```
+
+##Order by 
+
+With SQL, you can also order the rows of your output. Suppose we would like to see all instances of a player hitting more than 50 home runs with the highest home run totals at the top. The query is written like this:
+
+```{r}
+query<-"select playerID,teamID,yearID,HR from Batting
+Where HR>50
+Order by HR DESC"
 sqldf(query)
 ```
 
