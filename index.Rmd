@@ -12,7 +12,8 @@ library(Lahman)
 library(sqldf)
 ```
 
-suppose now I would like to see the home run totals for the 1927 Yankees. I could write the following query:
+####Example 1 
+Suppose now I would like to see the home run totals for the 1927 Yankees. I could write the following query:
 
 ```{r}
 query<-"select playerID,yearID,teamID,HR from Batting
@@ -20,13 +21,15 @@ where teamID='NYA'and yearID=1927"
 sqldf(query)
 ```
 
-Let's try another example. we want to find instances where the Yankees have hit 40 or more home runs. I would write the query this way:
+####Example 2
+We want to find instances where the Yankees have hit 40 or more home runs. I would write the query this way:
 ```{r}
 query<-"Select playerID,yearID,teamID,HR from Batting
 Where teamID='NYA' and HR>=40"
 sqldf(query)
 ```
 
+####Example 3
 Now we want to see instances when a player had more than 40 home runs but less than 60 strikeouts. This is how the query would look:
 ```{r}
 query<-"select playerID,yearID,teamID,HR,SO from Batting
@@ -34,6 +37,7 @@ where HR>=40 and SO<60"
 sqldf(query)
 ```
 
+####Example 4
 Let's do a tougher example. We want to find instances where the Phillies in the 1970's hit more than 30 home runs. The tricky part is figuring out how to display data between 1970 and 1979. This is how I wrote the query:
 ```{r}
 query<-"Select playerID,teamID,yearID,HR from Batting 
@@ -43,7 +47,10 @@ sqldf(query)
 
 ##Order by 
 
-With SQL, you can also order the rows of your output. Suppose we would like to see all instances of a player hitting more than 50 home runs with the highest home run totals at the top. The query is written like this:
+With SQL, you can also order the rows of your output.
+
+####Example 1
+Suppose we would like to see all instances of a player hitting more than 50 home runs with the highest home run totals at the top. The query is written like this:
 
 ```{r}
 query<-"select playerID,teamID,yearID,HR from Batting
@@ -52,6 +59,7 @@ Order by HR DESC"
 sqldf(query)
 ```
 
+####Example 2
 For our next example, find instances of a player striking out less than 10 times. Make sure each player has had at least 400 at bats (AB). Order by having the least number of strikeouts at the top. Here's how the query should look:
 ```{r}
 query<-"select playerID,teamID,SO,AB from Batting
@@ -62,14 +70,16 @@ sqldf(query)
 
 ##Aggregation
 
-This section is about grouping. Our first example asks us to find all of Babe Ruth's home runs. If we write the query like this:
+This section is about grouping rows and columns together.
+
+####Example 1
+Our first example asks us to find all of Babe Ruth's home runs. If we write the query like this:
 ```{r}
 query<-"select playerID,HR from Batting
 where playerID='ruthba01'"
 sqldf(query)
 ```
 There are multiple rows with the same row title. To group all of these totals together, we have to use "group by". We also have to add all the home runs together by typing "sum" next to HR like so:
-
 ```{r}
 query<-"select playerID,sum(HR) from Batting
 where playerID='ruthba01'
@@ -78,7 +88,8 @@ group by playerID"
 sqldf(query)
 ```
 
-Next question. Find the career home run totals for all players but limit the output to total 600 or more. Order by career total. When you group before you filter you use "having" instead of "where."
+####Example 2
+Find the career home run totals for all players but limit the output to total 600 or more. Order by career total. When you group before you filter you use "having" instead of "where."
 
 ```{r}
 query<-"select playerID,sum(HR) from Batting
@@ -89,6 +100,7 @@ order by sum(HR) DESC"
 sqldf(query)
 ```
 
+####Example 3
 Now, find the players who have averaged more than 30 home runs per year throughout their career. Let's order by having the highest average at the top. 
 
 ```{r}
