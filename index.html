@@ -462,6 +462,124 @@ sqldf(query)</code></pre>
 ## 13 abreujo02 30.33333</code></pre>
 </div>
 </div>
+<div id="inner-join" class="section level2">
+<h2>Inner Join</h2>
+<p>All this time we have been workign with one table, but you are also able to join two different tables together to find new information.</p>
+<div id="example-1-3" class="section level4">
+<h4>Example 1</h4>
+<p>Instead of just playerID, we want a first and last name. We also want teamID, yearID, and HR. The player should be Babe Ruth. The table called Master has first and last name information. We use “inner join master” to join the Batting table and the Master table together. Then we use “on” to specify which variable joins the tables. So the quuery should look like this:</p>
+<pre class="r"><code>query&lt;-&quot;select nameFirst,nameLast,teamID,yearID,HR
+from Batting inner join Master
+On Batting.playerID=Master.playerID
+where Batting.playerID='ruthba01'&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##    nameFirst nameLast teamID yearID HR
+## 1       Babe     Ruth    BOS   1914  0
+## 2       Babe     Ruth    BOS   1915  4
+## 3       Babe     Ruth    BOS   1916  3
+## 4       Babe     Ruth    BOS   1917  2
+## 5       Babe     Ruth    BOS   1918 11
+## 6       Babe     Ruth    BOS   1919 29
+## 7       Babe     Ruth    NYA   1920 54
+## 8       Babe     Ruth    NYA   1921 59
+## 9       Babe     Ruth    NYA   1922 35
+## 10      Babe     Ruth    NYA   1923 41
+## 11      Babe     Ruth    NYA   1924 46
+## 12      Babe     Ruth    NYA   1925 25
+## 13      Babe     Ruth    NYA   1926 47
+## 14      Babe     Ruth    NYA   1927 60
+## 15      Babe     Ruth    NYA   1928 54
+## 16      Babe     Ruth    NYA   1929 46
+## 17      Babe     Ruth    NYA   1930 49
+## 18      Babe     Ruth    NYA   1931 46
+## 19      Babe     Ruth    NYA   1932 41
+## 20      Babe     Ruth    NYA   1933 34
+## 21      Babe     Ruth    NYA   1934 22
+## 22      Babe     Ruth    BSN   1935  6</code></pre>
+</div>
+<div id="example-2-3" class="section level4">
+<h4>Example 2</h4>
+<p>Find all instances of players hitting more than 50 home runs. only this time, include first and last names, team, year, and home runs. If you want you can order them too. We use Batting._______ or Master._______to specify which table the column is coming from.</p>
+<pre class="r"><code>query&lt;-&quot;select teamID,yearID,HR,nameFirst,nameLast
+from Batting inner join Master
+on Batting.playerID=Master.playerID
+where Batting.HR&gt;50
+order by HR&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##    teamID yearID HR nameFirst  nameLast
+## 1     PIT   1947 51     Ralph     Kiner
+## 2     NY1   1947 51    Johnny      Mize
+## 3     NY1   1955 51    Willie      Mays
+## 4     DET   1990 51     Cecil   Fielder
+## 5     ATL   2005 51    Andruw     Jones
+## 6     NYA   1956 52    Mickey    Mantle
+## 7     SFN   1965 52    Willie      Mays
+## 8     CIN   1977 52    George    Foster
+## 9     OAK   1996 52      Mark   McGwire
+## 10    TEX   2001 52      Alex Rodriguez
+## 11    CLE   2002 52       Jim     Thome
+## 12    BAL   2013 53     Chris     Davis
+## 13    NYA   1920 54      Babe      Ruth
+## 14    NYA   1928 54      Babe      Ruth
+## 15    PIT   1949 54     Ralph     Kiner
+## 16    NYA   1961 54    Mickey    Mantle
+## 17    BOS   2006 54     David     Ortiz
+## 18    NYA   2007 54      Alex Rodriguez
+## 19    TOR   2010 54      Jose  Bautista
+## 20    CHN   1930 56      Hack    Wilson
+## 21    SEA   1997 56       Ken   Griffey
+## 22    SEA   1998 56       Ken   Griffey
+## 23    ARI   2001 57      Luis  Gonzalez
+## 24    TEX   2002 57      Alex Rodriguez
+## 25    PHA   1932 58    Jimmie      Foxx
+## 26    DET   1938 58      Hank Greenberg
+## 27    PHI   2006 58      Ryan    Howard
+## 28    NYA   1921 59      Babe      Ruth
+## 29    NYA   1927 60      Babe      Ruth
+## 30    NYA   1961 61     Roger     Maris
+## 31    CHN   1999 63     Sammy      Sosa
+## 32    CHN   2001 64     Sammy      Sosa
+## 33    SLN   1999 65      Mark   McGwire
+## 34    CHN   1998 66     Sammy      Sosa
+## 35    SLN   1998 70      Mark   McGwire
+## 36    SFN   2001 73     Barry     Bonds</code></pre>
+</div>
+<div id="example-3-2" class="section level4">
+<h4>Example 3</h4>
+<p>This is a short but tough example. We are using a different table called Teams this time. We want Babe Ruth with playerID, team name, Year, and HR. The tricky part is that two columns (teamID and YearID) in both tables are the same, not just one. So we have to specify that.</p>
+<pre class="r"><code>query&lt;-&quot;select playerID,name,Batting.yearID,Batting.HR
+from Batting inner join Teams
+on Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
+where playerID='ruthba01'&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##    playerID             name yearID HR
+## 1  ruthba01   Boston Red Sox   1914  0
+## 2  ruthba01   Boston Red Sox   1915  4
+## 3  ruthba01   Boston Red Sox   1916  3
+## 4  ruthba01   Boston Red Sox   1917  2
+## 5  ruthba01   Boston Red Sox   1918 11
+## 6  ruthba01   Boston Red Sox   1919 29
+## 7  ruthba01 New York Yankees   1920 54
+## 8  ruthba01 New York Yankees   1921 59
+## 9  ruthba01 New York Yankees   1922 35
+## 10 ruthba01 New York Yankees   1923 41
+## 11 ruthba01 New York Yankees   1924 46
+## 12 ruthba01 New York Yankees   1925 25
+## 13 ruthba01 New York Yankees   1926 47
+## 14 ruthba01 New York Yankees   1927 60
+## 15 ruthba01 New York Yankees   1928 54
+## 16 ruthba01 New York Yankees   1929 46
+## 17 ruthba01 New York Yankees   1930 49
+## 18 ruthba01 New York Yankees   1931 46
+## 19 ruthba01 New York Yankees   1932 41
+## 20 ruthba01 New York Yankees   1933 34
+## 21 ruthba01 New York Yankees   1934 22
+## 22 ruthba01    Boston Braves   1935  6</code></pre>
+</div>
+</div>
 
 
 
