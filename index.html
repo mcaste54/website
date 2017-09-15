@@ -579,6 +579,83 @@ sqldf(query)</code></pre>
 ## 21 ruthba01 New York Yankees   1934 22
 ## 22 ruthba01    Boston Braves   1935  6</code></pre>
 </div>
+<div id="example-4-1" class="section level4">
+<h4>Example 4</h4>
+<p>This time we are joining 3 tables together. Let’s pick on Babe Ruth again selecting first and last name, team, home runs, and team name. When joining a third table, we put parentheses around the other two joined tables.</p>
+<pre class="r"><code>query&lt;-&quot;select nameFirst,nameLast,name,Batting.yearID,Batting.HR
+from (Batting inner join Master
+on Batting.playerID=Master.playerID) inner join Teams
+on Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
+where Batting.playerID='ruthba01'&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##    nameFirst nameLast             name yearID HR
+## 1       Babe     Ruth   Boston Red Sox   1914  0
+## 2       Babe     Ruth   Boston Red Sox   1915  4
+## 3       Babe     Ruth   Boston Red Sox   1916  3
+## 4       Babe     Ruth   Boston Red Sox   1917  2
+## 5       Babe     Ruth   Boston Red Sox   1918 11
+## 6       Babe     Ruth   Boston Red Sox   1919 29
+## 7       Babe     Ruth New York Yankees   1920 54
+## 8       Babe     Ruth New York Yankees   1921 59
+## 9       Babe     Ruth New York Yankees   1922 35
+## 10      Babe     Ruth New York Yankees   1923 41
+## 11      Babe     Ruth New York Yankees   1924 46
+## 12      Babe     Ruth New York Yankees   1925 25
+## 13      Babe     Ruth New York Yankees   1926 47
+## 14      Babe     Ruth New York Yankees   1927 60
+## 15      Babe     Ruth New York Yankees   1928 54
+## 16      Babe     Ruth New York Yankees   1929 46
+## 17      Babe     Ruth New York Yankees   1930 49
+## 18      Babe     Ruth New York Yankees   1931 46
+## 19      Babe     Ruth New York Yankees   1932 41
+## 20      Babe     Ruth New York Yankees   1933 34
+## 21      Babe     Ruth New York Yankees   1934 22
+## 22      Babe     Ruth    Boston Braves   1935  6</code></pre>
+</div>
+<div id="example-5" class="section level4">
+<h4>Example 5</h4>
+<p>Now we want career home run totals for all players, limiting to at least 600 home runs with the highest totals at the top. First and last name should be included too. To write this query we have to start grouping columns because we want total home runs, not individual.</p>
+<pre class="r"><code>query&lt;-&quot;select nameFirst,nameLast,sum(HR)
+from Batting inner join Master
+on Batting.playerID=Master.playerID
+group by Batting.playerID
+having sum(HR)&gt;=600
+order by sum(HR) DESC&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##   nameFirst  nameLast sum(HR)
+## 1     Barry     Bonds     762
+## 2      Hank     Aaron     755
+## 3      Babe      Ruth     714
+## 4      Alex Rodriguez     696
+## 5    Willie      Mays     660
+## 6       Ken   Griffey     630
+## 7       Jim     Thome     612
+## 8     Sammy      Sosa     609</code></pre>
+</div>
+<div id="example-6" class="section level4">
+<h4>Example 6</h4>
+<p>For our final example, we are looking for all players with the first name Bob who averaged more than $1,000,000 in salary over their career. We should include last names. We are introducing a new table called “Salaries”. This example includes filtering, grouping, ordering, and joining at the same time.</p>
+<pre class="r"><code>query&lt;-&quot;select nameFirst,nameLast,avg(salary)
+from Master inner join Salaries
+on Master.playerID=Salaries.playerID
+where nameFirst='Bob'
+group by Master.playerID
+having avg(salary)&gt;1000000
+order by avg(salary) DESC&quot;
+
+sqldf(query)</code></pre>
+<pre><code>##   nameFirst  nameLast avg(salary)
+## 1       Bob   Wickman     2635813
+## 2       Bob     Welch     1930417
+## 3       Bob     Howry     1804583
+## 4       Bob    Horner     1416667
+## 5       Bob Tewksbury     1288182
+## 6       Bob   Stanley     1067500
+## 7       Bob     Boone     1047580
+## 8       Bob     Ojeda     1035926</code></pre>
+</div>
 </div>
 
 

@@ -6,7 +6,6 @@ output: html_document
 ##Filtering Columns and Rows
 
 With SQL you can filter columns and rows by using SELECT and WHERE. Let's look at an example using the Lahman database. So we should first load that database, along with the package sqdlf.
-
 ```{r message=FALSE, warning=FALSE}
 library(Lahman)
 library(sqldf)
@@ -14,7 +13,6 @@ library(sqldf)
 
 ####Example 1 
 Suppose now I would like to see the home run totals for the 1927 Yankees. I could write the following query:
-
 ```{r}
 query<-"select playerID,yearID,teamID,HR from Batting
 where teamID='NYA'and yearID=1927"
@@ -143,6 +141,45 @@ query<-"select playerID,name,Batting.yearID,Batting.HR
 from Batting inner join Teams
 on Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
 where playerID='ruthba01'"
+
+sqldf(query)
+```
+
+####Example 4
+This time we are joining 3 tables together. Let's pick on Babe Ruth again selecting first and last name, team, home runs, and team name. When joining a third table, we put parentheses around the other two joined tables.
+```{r}
+query<-"select nameFirst,nameLast,name,Batting.yearID,Batting.HR
+from (Batting inner join Master
+on Batting.playerID=Master.playerID) inner join Teams
+on Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
+where Batting.playerID='ruthba01'"
+
+sqldf(query)
+```
+
+####Example 5
+Now we want career home run totals for all players, limiting to at least 600 home runs with the highest totals at the top. First and last name should be included too. To write this query we have to start grouping columns because we want total home runs, not individual.
+```{r}
+query<-"select nameFirst,nameLast,sum(HR)
+from Batting inner join Master
+on Batting.playerID=Master.playerID
+group by Batting.playerID
+having sum(HR)>=600
+order by sum(HR) DESC"
+
+sqldf(query)
+```
+
+####Example 6
+For our final example, we are looking for all players with the first name Bob who averaged more than $1,000,000 in salary over their career. We should include last names. We are introducing a new table called "Salaries". This example includes filtering, grouping, ordering, and joining at the same time. 
+```{r}
+query<-"select nameFirst,nameLast,avg(salary)
+from Master inner join Salaries
+on Master.playerID=Salaries.playerID
+where nameFirst='Bob'
+group by Master.playerID
+having avg(salary)>1000000
+order by avg(salary) DESC"
 
 sqldf(query)
 ```
